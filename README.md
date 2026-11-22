@@ -18,6 +18,10 @@ php artisan schedule:work   # terminal lain (kedaluwarsa donasi, campaign selesa
 
 Admin hasil seed: `admin@alkiromaamanah.test` / `password`. **Ganti sebelum online**, atau buat admin baru dengan `php artisan app:create-admin`.
 
+Seeder menyiapkan 1 admin, 1 kategori Pendidikan, 1 campaign testing aktif (target Rp1.000.000, dana terkumpul Rp0, 0 donatur, tanpa batas waktu), 1 banner, dan 1 laporan bulan sebelumnya dengan semua saldo Rp0. Tidak ada donasi atau penyaluran contoh. Seeder tidak membutuhkan dependensi development.
+
+Untuk mengisi **database hosting baru yang masih kosong**, jalankan `php artisan migrate --seed --force`. Jika memakai seed ini, gunakan akun admin hasil seed dan ganti password-nya sebelum website dibuka untuk umum.
+
 Test: `./vendor/bin/pest` (SQLite in-memory; butuh ekstensi `pdo_sqlite`).
 
 ## Alur uang (penting)

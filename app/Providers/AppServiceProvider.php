@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimiting(): void
     {
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(120)->by('api:'.$request->ip()));
+
         RateLimiter::for('donation', fn (Request $request) => [
             Limit::perMinute(6)->by('donation:ip:'.$request->ip()),
             Limit::perHour(30)->by('donation:ip-hour:'.$request->ip()),

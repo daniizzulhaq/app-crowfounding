@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MobileDonorToken;
 use App\Models\OtpCode;
 use Illuminate\Support\Facades\Schedule;
 
@@ -7,7 +8,7 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('donations:sync-pending')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('donations:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('campaigns:complete-expired')->dailyAt('00:05')->withoutOverlapping();
-Schedule::command('model:prune', ['--model' => [OtpCode::class]])->daily();
+Schedule::command('model:prune', ['--model' => [OtpCode::class, MobileDonorToken::class]])->daily();
 
 // Shared hosting (cPanel) without Supervisor: drain the database queue every minute.
 Schedule::command('queue:work --stop-when-empty --tries=3 --max-time=50')

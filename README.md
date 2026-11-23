@@ -1,5 +1,7 @@
 # Alkiroma Amanah
 
+API Flutter tersedia di `/api/v1`: lihat [dokumentasi API mobile](docs/mobile-api.md). Proyek Flutter ada di folder saudara `../app-mobile-crowfoundig` dan memakai database web melalui API. Jalankan `php artisan migrate` untuk menambahkan tabel token donor mobile.
+
 Website donasi milik satu yayasan (berizin PUB). Halaman publik mobile-first berupa Blade + Tailwind v4 + Alpine. Panel admin memakai Filament 3, pembayaran memakai Midtrans Snap.
 
 ## Menjalankan lokal

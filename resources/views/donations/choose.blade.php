@@ -19,7 +19,7 @@
         </form>
 
         {{-- Category chips --}}
-        <nav aria-label="Kategori" class="no-scrollbar mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+        <nav aria-label="Kategori" class="filter-chips mt-3 px-4 pb-1">
             <a href="{{ route('donations.choose', array_filter(['q' => $filters['q'], 'nominal' => $nominal])) }}"
                class="chip" @if (! $filters['kategori']) aria-current="page" @endif>Semua</a>
             @foreach ($categories as $category)
@@ -33,8 +33,8 @@
             @if (! $filters['q'] && ! $filters['kategori'])
                 <a href="{{ route('donations.create', array_filter(['nominal' => $nominal])) }}"
                    class="card flex items-center gap-3 border-jade/30 p-3 hover:border-jade">
-                    <span class="flex size-14 shrink-0 items-center justify-center rounded-xl bg-jade text-white">
-                        <x-glyph name="heart" class="size-7" filled />
+                    <span class="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-jade/10 bg-jade-soft text-jade">
+                        <x-glyph name="hand-coins" class="size-7" />
                     </span>
                     <span class="min-w-0 flex-1">
                         <span class="block text-sm font-bold">Sedekah umum</span>

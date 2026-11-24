@@ -31,7 +31,7 @@
                 <p class="money mt-4 text-2xl font-extrabold text-jade">{{ rupiah($donation->amount) }}</p>
                 <p class="text-sm text-stone">untuk <span class="font-semibold text-ink">{{ $target }}</span></p>
             </div>
-            <dl class="divide-y divide-line border-t border-line text-left text-sm">
+            <dl class="receipt-details divide-y divide-line border-t border-line text-left text-sm">
                 <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">No. donasi</dt><dd class="money font-semibold">{{ $donation->order_id }}</dd></div>
                 <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">Atas nama</dt><dd class="font-semibold">{{ $donation->display_name }}</dd></div>
                 @if ($donation->payment_method)

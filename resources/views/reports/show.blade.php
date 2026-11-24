@@ -5,7 +5,7 @@
         <section class="card p-4">
             <p class="text-xs text-stone">Saldo akhir bulan</p>
             <p class="money text-2xl font-extrabold text-jade">{{ rupiah($report->closing_balance) }}</p>
-            <dl class="mt-4 divide-y divide-line text-sm">
+            <dl class="report-totals mt-4 divide-y divide-line text-sm">
                 <div class="flex justify-between py-2.5"><dt class="text-stone">Saldo awal</dt><dd class="money font-semibold">{{ rupiah($report->opening_balance) }}</dd></div>
                 <div class="flex justify-between py-2.5"><dt class="text-stone">Dana masuk <span class="text-xs">({{ number_format($report->donation_count, 0, ',', '.') }} donasi)</span></dt><dd class="money font-semibold text-jade">+{{ rupiah($report->total_in) }}</dd></div>
                 <div class="flex justify-between py-2.5"><dt class="text-stone">Operasional ({{ $report->operational_fee_percent }}%)</dt><dd class="money font-semibold">−{{ rupiah($report->total_operational) }}</dd></div>
@@ -19,7 +19,7 @@
             @forelse ($report->breakdown ?? [] as $line)
                 <div class="border-t border-line py-3 first:border-t-0">
                     <p class="text-sm font-semibold">{{ $line['title'] }}</p>
-                    <div class="mt-1 flex justify-between text-xs text-stone">
+                    <div class="mt-1 flex flex-wrap justify-between gap-x-4 gap-y-1 text-xs text-stone">
                         <span>Masuk <span class="money font-semibold text-ink">{{ rupiah($line['in']) }}</span></span>
                         <span>Disalurkan <span class="money font-semibold text-ink">{{ rupiah($line['distributed']) }}</span></span>
                     </div>

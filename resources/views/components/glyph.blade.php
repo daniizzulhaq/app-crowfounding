@@ -17,7 +17,7 @@
         'health' => 'stethoscope', 'food' => 'utensils', 'grid' => 'grid-2x2',
         'handshake' => 'handshake', 'quote' => 'quote', 'sprout' => 'sprout',
         'heart-handshake' => 'heart-handshake', 'badge' => 'badge-check',
-        'sliders' => 'sliders-horizontal',
+        'sliders' => 'sliders-horizontal', 'hand-coins' => 'hand-coins',
     ];
     $paths = '';
     $iconFile = isset($icons[$name]) ? public_path('icons/lucide/'.$icons[$name].'.svg') : null;

@@ -117,7 +117,7 @@
                     <x-section-title title="Bantu wujudkan harapan" :href="route('campaigns.index')" id="featured-title" />
                     <p class="section-description">Sedikit darimu, begitu berarti bagi mereka.</p>
                 </div>
-                <div class="campaign-rail no-scrollbar">
+                <div class="campaign-rail">
                     @foreach ($featured as $campaign)
                         <x-campaign.card :campaign="$campaign" />
                     @endforeach
@@ -194,19 +194,19 @@
             </div>
         </section>
 
-        @if ($prayers->isNotEmpty())
             <section aria-labelledby="prayer-title">
                 <div class="px-5">
                     <x-section-title title="Doa baik, dari hati" :href="route('prayers.index')" id="prayer-title" />
                     <p class="section-description">Semoga setiap harapan baik menemukan jalannya.</p>
                 </div>
-                <div class="prayer-rail no-scrollbar">
-                    @foreach ($prayers as $donation)
-                        <div class="w-[300px] max-w-[85%] shrink-0 snap-start"><x-prayer-card :donation="$donation" /></div>
-                    @endforeach
+                <div class="prayer-rail">
+                    @forelse ($prayers as $donation)
+                        <x-prayer-card :donation="$donation" />
+                    @empty
+                        <p class="card p-5 text-sm text-stone">Doa dari donatur akan tampil di sini setelah donasi berhasil.</p>
+                    @endforelse
                 </div>
             </section>
-        @endif
 
         <x-site-footer />
     </div>

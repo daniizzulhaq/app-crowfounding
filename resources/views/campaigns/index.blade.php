@@ -2,7 +2,7 @@
     <x-page-intro eyebrow="TEMUKAN KEBAIKANMU" title="Bersama, wujudkan harapan." description="Pilih cerita yang menyentuh hatimu. Jadilah bagian dari perubahan, mulai hari ini." icon="hand-heart" />
     <div class="pt-0">
         {{-- Category chips --}}
-        <nav aria-label="Kategori" class="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-1">
+        <nav aria-label="Kategori" class="filter-chips px-4 pb-1">
             <a href="{{ route('campaigns.index', array_filter(['q' => $filters['q'], 'urut' => $filters['urut']])) }}"
                class="chip" @if (! $filters['kategori']) aria-current="page" @endif>Semua</a>
             @foreach ($categories as $category)
@@ -12,7 +12,7 @@
         </nav>
 
         {{-- Sort --}}
-        <form method="get" action="{{ route('campaigns.index') }}" class="mt-3 flex items-center justify-between gap-3 px-4">
+        <form method="get" action="{{ route('campaigns.index') }}" class="campaign-sort mt-3 px-4">
             @if ($filters['q'])<input type="hidden" name="q" value="{{ $filters['q'] }}">@endif
             @if ($filters['kategori'])<input type="hidden" name="kategori" value="{{ $filters['kategori'] }}">@endif
             <p class="text-sm text-stone" aria-live="polite">

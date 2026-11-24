@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        <nav aria-label="Filter kategori" class="no-scrollbar mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+        <nav aria-label="Filter kategori" class="filter-chips mt-3 px-4 pb-1">
             <a href="{{ route('distributions.index', array_filter(['campaign' => $campaign?->slug])) }}" class="chip" @if (! $categorySlug) aria-current="page" @endif>Semua</a>
             @foreach ($categories as $category)
                 <a href="{{ route('distributions.index', array_filter(['campaign' => $campaign?->slug, 'kategori' => $category->slug])) }}"

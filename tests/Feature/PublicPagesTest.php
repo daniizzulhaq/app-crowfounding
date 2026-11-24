@@ -28,7 +28,10 @@ it('renders the home page with brand, campaigns and prayers but never phone numb
 });
 
 it('shows empty states when there is no content', function () {
-    $this->get('/')->assertOk()->assertSee('Belum ada campaign aktif')->assertSee('Belum ada kabar penyaluran');
+    $this->get('/')->assertOk()->assertSee('Belum ada campaign aktif')->assertSee('Belum ada kabar penyaluran')
+        ->assertSee('Doa baik, dari hati')->assertSee('Semoga setiap harapan baik menemukan jalannya.')
+        ->assertSee('Doa dari donatur akan tampil di sini setelah donasi berhasil.')
+        ->assertSee('href="'.route('prayers.index').'"', false);
     $this->get('/campaign?q=tidakada')->assertOk()->assertSee('Campaign tidak ditemukan');
     $this->get('/laporan')->assertOk()->assertSee('Belum ada laporan terbit');
 });
@@ -102,7 +105,7 @@ it('includes SEO and Open Graph meta tags', function () {
     $this->get(route('campaigns.show', $campaign))
         ->assertSee('<title>Bantu korban banjir · Alkiroma Amanah</title>', false)
         ->assertSee('property="og:title" content="Bantu korban banjir"', false)
-        ->assertSee('og-default.png', false)
+        ->assertSee('property="og:image" content="'.asset('images/programs/jumat-berkah.jpg').'"', false)
         ->assertSee('name="description" content="Ringkasan banjir"', false);
 });
 

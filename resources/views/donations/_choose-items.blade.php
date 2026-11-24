@@ -1,6 +1,6 @@
 @foreach ($campaigns as $campaign)
     <li class="card p-3">
-        <div class="flex gap-3">
+        <div class="choose-campaign-main">
             <a href="{{ route('campaigns.show', $campaign) }}" class="shrink-0" aria-label="Lihat detail {{ $campaign->title }}">
                 <x-campaign.image :campaign="$campaign" conversion="thumb" class="h-[100px] w-[104px] rounded-xl" />
             </a>
@@ -8,7 +8,7 @@
                 <p class="text-[11px] font-semibold text-jade">{{ $campaign->category?->name }}</p>
                 <h3 class="line-clamp-2 text-sm leading-5 font-bold">{{ $campaign->title }}</h3>
                 <x-progress :value="$campaign->progress_percent" size="sm" class="mt-auto mb-1" />
-                <p class="flex justify-between gap-2 text-xs text-stone">
+                <p class="flex flex-wrap justify-between gap-2 text-xs text-stone">
                     <span class="money font-bold text-ink">{{ rupiah($campaign->collected_amount) }}</span>
                     <span>
                         @if ($campaign->days_left !== null)

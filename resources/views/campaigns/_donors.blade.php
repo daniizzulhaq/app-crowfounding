@@ -5,7 +5,7 @@
                 {{ mb_strtoupper(mb_substr($donation->display_name, 0, 1)) }}
             </div>
             <div class="min-w-0 flex-1">
-                <p class="truncate text-sm font-bold">{{ $donation->display_name }}</p>
+                <p class="text-sm font-bold">{{ $donation->display_name }}</p>
                 <p class="text-xs text-stone">
                     Berdonasi <span class="money font-semibold text-ink">{{ rupiah($donation->amount) }}</span>
                     · {{ $donation->paid_at?->diffForHumans() }}

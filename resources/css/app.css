@@ -164,7 +164,7 @@
 
 @layer base {
     body { line-height: 1.6; background-image: radial-gradient(ellipse at 15% 5%, #d9e7df 0, transparent 45%), radial-gradient(ellipse at 90% 85%, #dee9e1 0, transparent 50%); background-attachment: fixed; }
-    .glyph { width: 1.25rem; height: 1.25rem; }
+    .glyph { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
     button, a, input, textarea, select { touch-action: manipulation; }
     button:not(:disabled), select { cursor: pointer; }
     input[type='search']::-webkit-search-cancel-button { cursor: pointer; }
@@ -173,11 +173,13 @@
 }
 
 @layer components {
-    .app-shell { box-shadow: 0 0 0 1px rgb(25 60 45 / .04), 0 18px 100px rgb(26 64 45 / .09); }
+    .app-shell { overflow-wrap: anywhere; box-shadow: 0 0 0 1px rgb(25 60 45 / .04), 0 18px 100px rgb(26 64 45 / .09); }
+    .app-shell main, .app-shell section, .app-shell article { min-width: 0; }
+    .app-shell .btn { min-width: 0; text-align: center; }
     .app-header { padding: 12px 20px 14px; background: rgb(255 255 255 / .96); backdrop-filter: blur(18px); border-bottom: 1px solid rgb(232 237 233 / .65); }
     .brand-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
     .brand-lockup { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .brand-logo { width: 44px; height: 49px; object-fit: contain; mix-blend-mode: multiply; }
+    .brand-logo { width: 44px; height: 49px; flex-shrink: 0; object-fit: contain; mix-blend-mode: multiply; }
     .brand-name { display: block; font-size: 24px; line-height: 1.2; font-weight: 800; letter-spacing: -.06em; color: #164b37; }
     .brand-period { color: #d1a349; }
     .brand-tagline { display: block; margin-top: 3px; color: #7a857e; font-size: 12px; font-weight: 500; letter-spacing: .015em; }
@@ -198,8 +200,8 @@
     .program-hero-track { display: flex; width: 100%; aspect-ratio: 3 / 2; overflow-x: auto; scroll-snap-type: x mandatory; background: #031326; }
     .program-hero-slide { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; flex-shrink: 0; scroll-snap-align: center; }
     .program-hero-slide img { display: block; width: 100%; height: 100%; object-fit: contain; }
-    .program-gallery-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; min-height: 60px; }
-    .program-gallery-caption strong { font-size: 13px; font-weight: 800; }
+    .program-gallery-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; padding: 8px 14px; min-height: 60px; }
+    .program-gallery-caption strong { min-width: 0; font-size: 13px; font-weight: 800; }
     .program-gallery-caption a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--color-jade); font-size: 11px; font-weight: 700; }
     .program-gallery-dots { display: flex; justify-content: center; }
     .program-gallery-dots button { display: flex; align-items: center; justify-content: center; width: 38px; height: 44px; }
@@ -207,19 +209,29 @@
     .program-gallery-dots span.is-active { width: 22px; background: var(--color-jade); }
     .campaign-program-image { background: #031326; }
     .campaign-program-image > img { object-fit: contain; }
-    .campaign-row--program { flex-direction: column; }
-    .campaign-row--program > .campaign-image { width: 100%; height: auto; }
     .campaign-detail-cover.campaign-program-image { min-height: 0; }
-    .home-trust { display: flex; justify-content: space-between; gap: 5px; padding: 15px 1px 0; }
+    .home-trust { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 4px 1px 0; }
     .home-trust > span { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #697b70; }
     .home-trust svg { width: 13px; height: 13px; color: var(--color-jade); }
     .eyebrow { font-size: 9px; font-weight: 800; letter-spacing: .13em; line-height: 1.8; }
-    .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .section-heading h2 { font-size: 18px; font-weight: 800; line-height: 1.45; letter-spacing: -.045em; }
-    .section-heading > a { display: inline-flex; align-items: center; min-height: 36px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--color-jade); }
+    .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 12px; margin-bottom: 12px; }
+    .section-heading h2 { flex: 1 1 170px; min-width: 0; font-size: 18px; font-weight: 800; line-height: 1.45; letter-spacing: -.045em; }
+    .section-heading > a { display: inline-flex; align-items: center; min-height: 44px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--color-jade); }
     .section-description { margin: -7px 0 16px; color: var(--color-stone); font-size: 12px; line-height: 1.8; }
     .category-section { margin-top: -5px; }
-    .category-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; }
+    .category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 8px; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-chips .chip { max-width: 100%; min-width: 0; padding-block: 8px; text-align: center; }
+    .campaign-sort { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+    .campaign-sort > p { flex: 1 1 160px; min-width: 0; }
+    .campaign-sort select { max-width: 100%; flex: 1 1 170px; min-width: 0; }
+    .choose-campaign-main { display: flex; gap: 12px; }
+    .report-totals > div { flex-wrap: wrap; gap: 4px 16px; }
+    .report-totals dt { flex: 1 1 140px; min-width: 0; }
+    .report-totals dd { max-width: 100%; margin-left: auto; }
+    .receipt-details > div { flex-wrap: wrap; gap: 4px 12px; }
+    .receipt-details dt { flex: 1 1 100px; min-width: 0; }
+    .receipt-details dd { flex: 1 1 150px; min-width: 0; max-width: 100%; text-align: right; }
     .category-link { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; font-size: 10px; font-weight: 600; line-height: 1.5; color: #4c6054; }
     .category-icon { display: flex; align-items: center; justify-content: center; width: 51px; height: 51px; border-radius: 17px; transition: transform .2s; }
     .category-link:hover .category-icon { transform: translateY(-3px); }
@@ -243,8 +255,9 @@
     .quick-donate .btn { min-height: 47px; border-radius: 12px; font-size: 13px; }
     .quick-footnote { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 7px 0 -3px; font-size: 10px; color: #71816d; }
     .quick-general { display: flex; align-items: center; justify-content: center; min-height: 40px; margin-bottom: -5px; color: var(--color-jade); font-size: 11px; font-weight: 600; }
-    .campaign-rail, .prayer-rail { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 20px; padding: 0 20px 8px; }
-    .campaign-card { width: 275px; border-color: #e7ece7; box-shadow: 0 4px 14px rgb(29 65 42 / .035); transition: border-color .2s, transform .2s; }
+    .prayer-rail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 0 20px; }
+    .campaign-rail { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; padding: 0 20px 8px; }
+    .campaign-card { width: min(275px, 100%); min-width: 0; border-color: #e7ece7; box-shadow: 0 4px 14px rgb(29 65 42 / .035); transition: border-color .2s, transform .2s; }
     .campaign-card:hover { border-color: #acccba; transform: translateY(-2px); }
     .campaign-category { position: absolute; left: 12px; top: 12px; max-width: calc(100% - 64px); padding: 5px 9px; border-radius: 7px; background: white; color: #20573d; font-size: 9px; font-weight: 700; box-shadow: 0 1px 5px rgb(0 0 0 / .06); }
     .campaign-heart { position: absolute; right: 12px; top: 12px; display: flex; align-items: center; justify-content: center; width: 29px; height: 29px; background: rgb(255 255 255 / .92); border-radius: 50%; color: #57715f; }
@@ -267,7 +280,7 @@
     .distribution-card { box-shadow: 0 3px 12px rgb(20 50 35 / .025); transition: border-color .2s; }
     .distribution-card:hover { border-color: #acccba; }
     .distribution-placeholder { display: flex; align-items: center; gap: 12px; padding: 20px; background: #f0f6ed; color: #568156; font-size: 14px; font-weight: 600; }
-    .prayer-card { background: #fdfefd; box-shadow: 0 3px 12px rgb(20 50 35 / .025); }
+    .prayer-card { min-width: 0; background: #fdfefd; box-shadow: 0 3px 12px rgb(20 50 35 / .025); }
     .prayer-avatar { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex-shrink: 0; border: 1px solid #e3ebdf; border-radius: 50%; background: #edf3e8; color: #698854; font-size: 14px; font-weight: 700; }
     .site-footer { margin-top: 2px; padding: 28px 24px 12px; border-top: 1px solid var(--color-line); background: #f6f8f4; color: #7c897d; }
     .footer-brand { display: flex; align-items: center; gap: 13px; }
@@ -316,14 +329,17 @@
     .back-header { border-radius: 28px 28px 0 0; }
     .app-shell > main > .relative:first-child { overflow: hidden; border-radius: 28px 28px 0 0; }
 }
+@media (min-width: 440px) {
+    .category-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
 @media (max-width: 374px) {
     .app-header { padding-left: 16px; padding-right: 16px; }
     .brand-name { font-size: 23px; }
-    .header-about { gap: 5px; padding-left: 8px; }
-    .header-about span { font-size: 9px; }
+    .header-about { justify-content: center; min-width: 44px; min-height: 44px; padding-left: 0; border-left: 0; }
+    .header-about span { display: none; }
     .header-about strong { font-size: 10px; }
     .program-hero-title { font-size: 20px; }
-    .home-trust > span { font-size: 8px; gap: 3px; }
+    .home-trust > span { font-size: 10px; gap: 3px; }
     .home-trust svg { width: 12px; height: 12px; }
     .category-grid { gap: 5px; }
     .category-icon { width: 40px; height: 43px; border-radius: 14px; }
@@ -338,6 +354,6 @@
     .section-heading h2 { font-size: 16px; }
     .section-heading > a { font-size: 10px; }
     .campaign-row { gap: 10px; padding: 10px; }
-    .campaign-row:not(.campaign-row--program) > .campaign-image { width: 86px; height: 122px; }
+    .campaign-row > .campaign-image { width: 86px; height: 122px; }
     .nav-item, .nav-donate { font-size: 8px; }
 }

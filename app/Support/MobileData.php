@@ -15,10 +15,14 @@ final class MobileData
     public static function campaign(Campaign $campaign, bool $detail = false): array
     {
         $cover = $campaign->coverUrl();
+        $program = $cover === null ? $campaign->programImage() : null;
         $data = [
             'id' => $campaign->id, 'slug' => $campaign->slug, 'title' => $campaign->title,
             'summary' => $campaign->summary, 'category' => $campaign->category?->only(['id', 'name', 'slug', 'icon']),
-            'cover_url' => $cover ?? $campaign->illustrationUrl(), 'is_illustration' => $cover === null,
+            'cover_url' => $cover ?? $campaign->programCoverUrl(), 'is_illustration' => false,
+            'cover_source' => $cover === null ? 'foundation' : 'upload',
+            'cover_asset' => $program['file'] ?? null,
+            'cover_aspect_ratio' => $program ? $program['width'] / $program['height'] : 16 / 9,
             'target_amount' => $campaign->target_amount,
             'collected_amount' => $campaign->collected_amount, 'distributed_amount' => $campaign->distributed_amount,
             'donor_count' => $campaign->donor_count, 'progress_percent' => $campaign->progress_percent,

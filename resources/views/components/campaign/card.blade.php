@@ -2,10 +2,9 @@
 <a href="{{ route('campaigns.show', $campaign) }}" class="campaign-card card flex shrink-0 snap-start flex-col overflow-hidden">
     <div class="relative">
         <x-campaign.image :campaign="$campaign" class="aspect-[16/10] w-full" />
-        <span class="campaign-category">{{ $campaign->category?->name ?? 'Kebaikan bersama' }}</span>
-        <span class="campaign-heart" aria-hidden="true"><x-glyph name="heart" class="size-[17px]" /></span>
     </div>
     <div class="flex flex-1 flex-col p-4">
+        <p class="mb-2 text-xs font-semibold text-jade">{{ $campaign->category?->name ?? 'Kebaikan bersama' }}</p>
         <p class="campaign-organizer"><x-glyph name="badge" class="size-3.5" /> {{ $settings->foundationName() }}</p>
         <h3 class="mt-2 mb-4 line-clamp-2 min-h-11 text-[15px] leading-[1.5] font-bold">{{ $campaign->title }}</h3>
         <div class="mt-auto">

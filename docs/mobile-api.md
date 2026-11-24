@@ -55,9 +55,11 @@ Nilai `urut`: `terbaru`, `segera-berakhir`, `terkumpul-terbanyak`. Daftar berpag
 
 Objek tunggal memakai `{"data": {...}}`. Nominal berupa integer rupiah. Pastikan `APP_URL`, disk public, dan `php artisan storage:link` sesuai agar URL gambar dapat diakses.
 
-`cover_url` campaign selalu berisi gambar yang digunakan web: foto unggahan jika tersedia, atau foto ilustrasi berdasarkan judul/kategori. `is_illustration` bernilai `true` untuk foto ilustrasi. Aturan pemilihan ilustrasi dipakai bersama oleh komponen web dan API, termasuk beranda, daftar, dan detail campaign. Flutter menampilkan label "Foto ilustrasi" sesuai penanda tersebut.
+`cover_url` campaign berisi foto unggahan jika tersedia, atau materi program asli Al Kirom yang dipilih berdasarkan judul/kategori. `cover_source` bernilai `upload` atau `foundation`; `cover_asset` berisi nama berkas program untuk sumber `foundation`, dan `cover_aspect_ratio` menentukan proporsi gambar. `is_illustration` tetap tersedia untuk kompatibilitas dan bernilai `false` pada materi asli yayasan. Web dan Flutter menampilkan desain program secara utuh tanpa label ilustrasi atau teks tambahan di atas gambar.
 
-Jika versi sebelumnya menampilkan ikon kosong di mobile sementara web menampilkan foto ilustrasi, unggah bersama `app/Models/Campaign.php`, `app/Support/MobileData.php`, dan `resources/views/components/campaign/image.blade.php` yang terbaru. Jalankan `php artisan optimize:clear` di hosting, lalu refresh halaman aplikasi. Perbaikan gambar pada API tidak memerlukan migrasi database. Perbarui/build ulang source Flutter untuk menampilkan label ilustrasi yang baru.
+Pengaturan publik pada `/settings` dan `/home` memuat `program_banners`: empat program dengan judul, berkas, dimensi, `image_url`, `query`, dan URL pencarian campaign. Urutannya Jumat Berkah, Sedekah Subuh, Zakat & Fidyah, dan Santunan Anak Yatim. Flutter membundel salinan foto yang identik dan juga mendukung backend lama yang masih mengirim sampul kosong atau URL foto stok.
+
+Untuk memperbarui gambar di hosting, unggah `app/Support/ProgramImages.php`, model/serializer/controller API, Blade/CSS terbaru, folder `public/images/programs`, dan hasil build `public/build`. Jalankan `php artisan optimize:clear`. Tidak ada perubahan atau migrasi database untuk pembaruan gambar ini. Jalankan ulang/build Flutter agar empat aset gambar baru ikut masuk.
 
 ## Donasi
 

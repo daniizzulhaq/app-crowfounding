@@ -5,16 +5,32 @@
                 <p>Assalamu’alaikum, <strong>Sahabat baik</strong></p>
                 <x-glyph name="sprout" class="size-4 text-jade" />
             </div>
-            <div class="hero-card">
-                <img src="{{ asset('images/crowdfunding/children.jpg') }}" alt="Keceriaan anak-anak di Lombok, Indonesia" fetchpriority="high" loading="eager" width="1200" height="780" class="hero-photo">
-                <div class="hero-shade"></div>
-                <span class="hero-pill"><span></span> SATU NIAT, BANYAK MANFAAT</span>
-                <div class="hero-copy">
-                    <h1 id="hero-title">Kebaikan kecil.<br><em>Harapan besar.</em></h1>
-                    <p>Bersama, hadirkan lebih banyak senyum<br>untuk mereka yang membutuhkan.</p>
-                    <a href="{{ route('campaigns.index') }}" class="hero-button"><x-glyph name="heart" class="size-4" /> Mulai berbagi</a>
+            <p class="eyebrow mb-1 text-jade">KEBAIKAN DARI HATI</p>
+            <h1 id="hero-title" class="program-hero-title">Kebaikan kecil. Harapan besar.</h1>
+            @php $programImages = \App\Support\ProgramImages::banners(); @endphp
+            <div class="program-gallery" x-data="carousel(4)" @pointerdown="pause()" @focusin="pause()" aria-label="Program Al Kirom">
+                <div class="program-gallery-card">
+                    <div x-ref="track" @scroll.debounce.80ms="onScroll()" class="program-hero-track no-scrollbar">
+                        @foreach ($programImages as $program)
+                            <a href="{{ $program['url'] }}" class="program-hero-slide" aria-label="Lihat campaign {{ $program['title'] }}">
+                                <img src="{{ $program['image_url'] }}" alt="Program Al Kirom: {{ $program['title'] }}"
+                                     width="{{ $program['width'] }}" height="{{ $program['height'] }}"
+                                     loading="{{ $loop->first ? 'eager' : 'lazy' }}" @if ($loop->first) fetchpriority="high" @endif decoding="async">
+                            </a>
+                        @endforeach
+                    </div>
+                    <div class="program-gallery-caption">
+                        <strong x-text="{{ Js::from(array_column($programImages, 'title')) }}[index]">{{ $programImages[0]['title'] }}</strong>
+                        <a href="{{ $programImages[0]['url'] }}" :href="{{ Js::from(array_column($programImages, 'url')) }}[index]">Lihat campaign <span aria-hidden="true">&rarr;</span></a>
+                    </div>
                 </div>
-                <span class="hero-photo-credit">Foto: Maximus Beaumont / Unsplash</span>
+                <div class="program-gallery-dots" aria-label="Pilih program">
+                    @foreach ($programImages as $program)
+                        <button type="button" @click="pause(); go({{ $loop->index }})" aria-label="Tampilkan {{ $program['title'] }}" :aria-pressed="(index === {{ $loop->index }}).toString()">
+                            <span :class="{ 'is-active': index === {{ $loop->index }} }" @class(['is-active' => $loop->first])></span>
+                        </button>
+                    @endforeach
+                </div>
             </div>
             <div class="home-trust">
                 <span><x-glyph name="shield" /> Donasi aman</span>

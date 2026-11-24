@@ -1,6 +1,8 @@
 @props(['campaign'])
-<a href="{{ route('campaigns.show', $campaign) }}" class="campaign-row">
-    <x-campaign.image :campaign="$campaign" conversion="thumb" class="h-[116px] w-[112px] shrink-0 rounded-2xl" />
+@php $hasCover = (bool) $campaign->coverUrl(); @endphp
+<a href="{{ route('campaigns.show', $campaign) }}" @class(['campaign-row', 'campaign-row--program' => ! $hasCover])>
+    <x-campaign.image :campaign="$campaign" conversion="thumb"
+                      :class="$hasCover ? 'h-[116px] w-[112px] shrink-0 rounded-2xl' : 'w-full rounded-2xl'" />
     <div class="flex min-w-0 flex-1 flex-col py-0.5">
         <p class="mb-1 text-xs font-semibold text-jade">{{ $campaign->category?->name ?? 'Kebaikan bersama' }}</p>
         <h3 class="line-clamp-2 text-sm leading-[1.5] font-bold">{{ $campaign->title }}</h3>

@@ -11,6 +11,7 @@ use App\Models\MonthlyReport;
 use App\Queries\HomePageData;
 use App\Services\Settings;
 use App\Support\MobileData;
+use App\Support\ProgramImages;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -30,7 +31,8 @@ class ContentController extends Controller
             'whatsapp_url' => $settings->whatsappLink(), 'email' => $settings->get('email'),
             'address' => $settings->get('address'), 'donation' => config('alkiroma.donation'),
             'otp_length' => config('alkiroma.otp.length'),
-            'hero_image_url' => asset('images/crowdfunding/children.jpg'),
+            'hero_image_url' => ProgramImages::url(ProgramImages::all()[0]),
+            'program_banners' => ProgramImages::banners(),
             'terms_url' => route('pages.terms'), 'privacy_url' => route('pages.privacy'),
             'web_url' => url('/'),
         ];

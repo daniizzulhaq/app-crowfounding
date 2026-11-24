@@ -1,5 +1,5 @@
 <x-layouts.app :title="$campaign->title" :description="$campaign->summary ?? $campaign->story"
-               :image="$campaign->coverUrl('card')" header="none" :nav="false">
+               :image="$campaign->coverUrl('card') ?? $campaign->programCoverUrl()" header="none" :nav="false">
     @php
         $shareUrl = route('campaigns.show', $campaign);
         $shareText = 'Yuk ikut berdonasi untuk "'.$campaign->title.'" bersama '.$settings->foundationName().'.';
@@ -24,7 +24,7 @@
     @endif
 
     {{-- Summary --}}
-    <section class="campaign-detail-summary bg-white px-5 pt-6 pb-5">
+    <section @class(['campaign-detail-summary bg-white px-5 pt-6 pb-5', 'campaign-detail-summary--program' => ! $campaign->coverUrl()])>
         <a href="{{ route('campaigns.index', ['kategori' => $campaign->category?->slug]) }}"
            class="inline-flex rounded-full bg-jade-soft px-3 py-1 text-xs font-semibold text-jade">{{ $campaign->category?->name }}</a>
         <h1 class="mt-2 text-xl leading-snug font-extrabold text-ink">{{ $campaign->title }}</h1>

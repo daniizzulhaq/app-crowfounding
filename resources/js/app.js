@@ -8,24 +8,41 @@ const digits = (v) => parseInt(String(v ?? '').replace(/\D+/g, ''), 10) || 0;
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Banner carousel: scroll-snap + dots + gentle autoplay (off for reduced motion). */
-Alpine.data('carousel', (count = 1) => ({
+Alpine.data('carousel', (count = 1, autoPlay = true, adaptiveHeight = false) => ({
     index: 0,
     count,
     timer: null,
+    resizeObserver: null,
     init() {
-        if (this.count > 1 && !reducedMotion()) {
+        if (autoPlay && this.count > 1 && !reducedMotion()) {
             this.timer = setInterval(() => this.go((this.index + 1) % this.count), 5000);
         }
+        if (adaptiveHeight) this.$nextTick(() => {
+            this.resizeObserver = new ResizeObserver(() => this.syncHeight());
+            [...this.$refs.track.children].forEach(slide => this.resizeObserver.observe(slide));
+            this.syncHeight();
+        });
     },
     onScroll() {
         const el = this.$refs.track;
-        this.index = Math.round(el.scrollLeft / el.clientWidth);
+        this.index = Math.max(0, Math.min(this.count - 1, Math.round(el.scrollLeft / el.clientWidth)));
+        this.syncHeight();
     },
     go(i) {
-        this.$refs.track.scrollTo({ left: i * this.$refs.track.clientWidth, behavior: reducedMotion() ? 'auto' : 'smooth' });
+        const target = Math.max(0, Math.min(this.count - 1, i));
+        this.$refs.track.scrollTo({ left: target * this.$refs.track.clientWidth, behavior: reducedMotion() ? 'auto' : 'smooth' });
     },
     pause() {
         clearInterval(this.timer);
+    },
+    syncHeight() {
+        if (!adaptiveHeight) return;
+        const slide = this.$refs.track.children[this.index];
+        if (slide) this.$refs.track.style.height = `${slide.getBoundingClientRect().height}px`;
+    },
+    destroy() {
+        this.pause();
+        this.resizeObserver?.disconnect();
     },
 }));
 

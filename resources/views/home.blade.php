@@ -199,13 +199,32 @@
                     <x-section-title title="Doa baik, dari hati" :href="route('prayers.index')" id="prayer-title" />
                     <p class="section-description">Semoga setiap harapan baik menemukan jalannya.</p>
                 </div>
-                <div class="prayer-rail">
-                    @forelse ($prayers as $donation)
-                        <x-prayer-card :donation="$donation" />
-                    @empty
-                        <p class="card p-5 text-sm text-stone">Doa dari donatur akan tampil di sini setelah donasi berhasil.</p>
-                    @endforelse
-                </div>
+                @if ($prayers->isNotEmpty())
+                    <div class="prayer-carousel px-5" x-data="carousel({{ $prayers->count() }}, false, true)" role="region" aria-label="Ucapan dan doa donatur">
+                        <div x-ref="track" @scroll.debounce.80ms="onScroll()" class="prayer-track no-scrollbar" tabindex="0"
+                             @keydown.arrow-right.prevent="go(Math.min(count - 1, index + 1))"
+                             @keydown.arrow-left.prevent="go(Math.max(0, index - 1))">
+                            @foreach ($prayers as $donation)
+                                <div class="prayer-slide" role="group" aria-label="Doa {{ $loop->iteration }} dari {{ $prayers->count() }}">
+                                    <x-prayer-card :donation="$donation" />
+                                </div>
+                            @endforeach
+                        </div>
+                        @if ($prayers->count() > 1)
+                            <div class="prayer-controls" aria-label="Pilih doa">
+                                <button type="button" class="prayer-arrow" @click="go(index - 1)" :disabled="index === 0" aria-label="Doa sebelumnya"><x-glyph name="back" class="size-4" /></button>
+                                @foreach ($prayers as $donation)
+                                    <button type="button" class="prayer-dot" @click="go({{ $loop->index }})" :aria-pressed="(index === {{ $loop->index }}).toString()" aria-label="Tampilkan doa {{ $loop->iteration }}">
+                                        <span :class="{ 'is-active': index === {{ $loop->index }} }" @class(['is-active' => $loop->first])></span>
+                                    </button>
+                                @endforeach
+                                <button type="button" class="prayer-arrow" @click="go(index + 1)" :disabled="index === count - 1" aria-label="Doa berikutnya"><x-glyph name="chevron-right" class="size-4" /></button>
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <div class="px-5"><p class="card p-5 text-sm text-stone">Doa dari donatur akan tampil di sini setelah donasi berhasil.</p></div>
+                @endif
             </section>
 
         <x-site-footer />

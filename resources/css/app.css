@@ -255,7 +255,15 @@
     .quick-donate .btn { min-height: 47px; border-radius: 12px; font-size: 13px; }
     .quick-footnote { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 7px 0 -3px; font-size: 10px; color: #71816d; }
     .quick-general { display: flex; align-items: center; justify-content: center; min-height: 40px; margin-bottom: -5px; color: var(--color-jade); font-size: 11px; font-weight: 600; }
-    .prayer-rail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 0 20px; }
+    .prayer-track { display: flex; align-items: flex-start; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; transition: height .2s ease; }
+    .prayer-slide { width: 100%; min-width: 0; flex: 0 0 100%; padding: 2px 3px 8px; scroll-snap-align: start; scroll-snap-stop: always; }
+    .prayer-controls { display: flex; align-items: center; justify-content: center; gap: 2px; padding-top: 6px; }
+    .prayer-arrow { display: flex; align-items: center; justify-content: center; width: 40px; height: 44px; border-radius: 12px; color: var(--color-jade); }
+    .prayer-arrow:hover:not(:disabled) { background: var(--color-jade-soft); }
+    .prayer-arrow:disabled { color: #cbd5ce; cursor: default; }
+    .prayer-dot { display: flex; align-items: center; justify-content: center; width: 28px; height: 44px; }
+    .prayer-dot span { width: 6px; height: 6px; border-radius: 20px; background: var(--color-line); transition: width .2s; }
+    .prayer-dot span.is-active { width: 20px; background: var(--color-jade); }
     .campaign-rail { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; padding: 0 20px 8px; }
     .campaign-card { width: min(275px, 100%); min-width: 0; border-color: #e7ece7; box-shadow: 0 4px 14px rgb(29 65 42 / .035); transition: border-color .2s, transform .2s; }
     .campaign-card:hover { border-color: #acccba; transform: translateY(-2px); }

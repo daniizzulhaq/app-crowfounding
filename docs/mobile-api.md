@@ -55,6 +55,10 @@ Nilai `urut`: `terbaru`, `segera-berakhir`, `terkumpul-terbanyak`. Daftar berpag
 
 Objek tunggal memakai `{"data": {...}}`. Nominal berupa integer rupiah. Pastikan `APP_URL`, disk public, dan `php artisan storage:link` sesuai agar URL gambar dapat diakses.
 
+`cover_url` campaign selalu berisi gambar yang digunakan web: foto unggahan jika tersedia, atau foto ilustrasi berdasarkan judul/kategori. `is_illustration` bernilai `true` untuk foto ilustrasi. Aturan pemilihan ilustrasi dipakai bersama oleh komponen web dan API, termasuk beranda, daftar, dan detail campaign. Flutter menampilkan label "Foto ilustrasi" sesuai penanda tersebut.
+
+Jika versi sebelumnya menampilkan ikon kosong di mobile sementara web menampilkan foto ilustrasi, unggah bersama `app/Models/Campaign.php`, `app/Support/MobileData.php`, dan `resources/views/components/campaign/image.blade.php` yang terbaru. Jalankan `php artisan optimize:clear` di hosting, lalu refresh halaman aplikasi. Perbaikan gambar pada API tidak memerlukan migrasi database. Perbarui/build ulang source Flutter untuk menampilkan label ilustrasi yang baru.
+
 ## Donasi
 
 ```http
@@ -73,7 +77,9 @@ Content-Type: application/json
 
 Untuk sedekah umum, hilangkan `campaign` atau isi `null`. Nama boleh kosong ketika anonim. Aturan nominal dan panjang input sama dengan web.
 
-Respons `201` memuat `data.order_id`, `amount`, `status`, `target_label`, tanggal, `payment_url`, dan `status_url`. Flutter menyimpan bukti di penyimpanan aman perangkat dan membuka Midtrans melalui browser. Setelah kembali, aplikasi memeriksa server untuk status terbaru.
+Respons `201` memuat `data.order_id`, `amount`, `status`, `target_label`, tanggal, `payment_url`, `finish_url`, dan `status_url`. Flutter menyimpan bukti di penyimpanan aman perangkat dan membuka Midtrans dalam WebView aplikasi Android/iOS. Redirect ke `finish_url` untuk pesanan yang sama ditangkap aplikasi sebelum halaman web bukti dimuat, lalu aplikasi kembali ke layar bukti native dan memeriksa server untuk status terbaru. Menutup pembayaran sebelum selesai juga memeriksa server; tidak otomatis mengubah donasi menjadi lunas atau batal.
+
+`finish_url` sama dengan callback transaksi Snap dari backend, berbentuk `https://alkiromberbagi.com/donasi/{orderId}`. Ini penanda navigasi, bukan endpoint yang membuktikan pembayaran. Halaman autentikasi bank HTTPS dapat dibuka dalam WebView; deep link e-wallet dapat meminta otorisasi pada aplikasi provider sementara. WebView tidak menerima header bearer token API.
 
 `status_url` adalah informasi privat. Simpan URL lengkap termasuk tanda tangannya. Order ID saja tidak dapat dipakai untuk mengambil bukti API. URL berlaku 7 hari dan diperbarui pada respons yang sah; riwayat OTP dapat menghasilkan URL baru setelah kedaluwarsa.
 

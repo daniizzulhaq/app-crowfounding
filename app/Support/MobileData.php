@@ -14,10 +14,12 @@ final class MobileData
 {
     public static function campaign(Campaign $campaign, bool $detail = false): array
     {
+        $cover = $campaign->coverUrl();
         $data = [
             'id' => $campaign->id, 'slug' => $campaign->slug, 'title' => $campaign->title,
             'summary' => $campaign->summary, 'category' => $campaign->category?->only(['id', 'name', 'slug', 'icon']),
-            'cover_url' => $campaign->coverUrl(), 'target_amount' => $campaign->target_amount,
+            'cover_url' => $cover ?? $campaign->illustrationUrl(), 'is_illustration' => $cover === null,
+            'target_amount' => $campaign->target_amount,
             'collected_amount' => $campaign->collected_amount, 'distributed_amount' => $campaign->distributed_amount,
             'donor_count' => $campaign->donor_count, 'progress_percent' => $campaign->progress_percent,
             'days_left' => $campaign->days_left, 'deadline' => $campaign->deadline?->toDateString(),
@@ -50,6 +52,7 @@ final class MobileData
             'created_at' => $donation->created_at?->toIso8601String(),
             'paid_at' => $donation->paid_at?->toIso8601String(),
             'expires_at' => $donation->expires_at?->toIso8601String(),
+            'finish_url' => route('donations.status', $donation->order_id),
             'payment_url' => $donation->status->value === 'pending' && $donation->snap_token
                 ? $base.'/snap/v4/redirection/'.rawurlencode($donation->snap_token) : null,
             // A receipt URL is a private capability, stored only on the donor's device.

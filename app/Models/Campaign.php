@@ -213,6 +213,22 @@ class Campaign extends Model implements HasMedia
         $this->addMediaConversion('card')->fit(Fit::Crop, 800, 450)->format('webp');
     }
 
+    /** Shared illustration used by the website and mobile API when no cover is uploaded. */
+    public function illustrationUrl(): string
+    {
+        $subject = mb_strtolower($this->title.' '.$this->category?->name);
+        $artwork = match (true) {
+            str_contains($subject, 'masjid'), str_contains($subject, 'musala'), str_contains($subject, 'dakwah') => 'mosque',
+            str_contains($subject, 'kesehatan'), str_contains($subject, 'operasi'), str_contains($subject, 'gizi') => 'health',
+            str_contains($subject, 'pendidikan'), str_contains($subject, 'beasiswa'), str_contains($subject, 'santri') => 'education',
+            str_contains($subject, 'pangan'), str_contains($subject, 'beras'), str_contains($subject, 'sembako') => 'food-aid',
+            str_contains($subject, 'yatim'), str_contains($subject, 'dhuafa') => 'children',
+            default => 'volunteers',
+        };
+
+        return asset('images/crowdfunding/'.$artwork.'.jpg');
+    }
+
     public function coverUrl(string $conversion = 'card'): ?string
     {
         $media = $this->getFirstMedia('cover');

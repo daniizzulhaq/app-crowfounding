@@ -47,6 +47,9 @@ it('creates mobile payments and uses the existing verified payment pipeline', fu
         'phone' => '081234567890', 'is_anonymous' => false,
     ])->assertCreated()->assertJsonPath('data.status', 'pending');
     $donation = Donation::firstWhere('order_id', $response->json('data.order_id'));
+    $response->assertJsonPath('data.finish_url', route('donations.status', $donation->order_id));
+    Http::assertSent(fn ($request) => str_contains($request->url(), '/snap/v1/transactions')
+        && $request['callbacks']['finish'] === $response->json('data.finish_url'));
     expect($campaign->fresh()->collected_amount)->toBe(0);
     app(ApplyPaymentNotification::class)->handle(midtransPayload($donation));
     app(ApplyPaymentNotification::class)->handle(midtransPayload($donation));

@@ -2,6 +2,10 @@
 
 API Flutter tersedia di `/api/v1`: lihat [dokumentasi API mobile](docs/mobile-api.md). Proyek Flutter ada di folder saudara `../app-mobile-crowfoundig` dan memakai database web melalui API. Jalankan `php artisan migrate` untuk menambahkan tabel token donor mobile.
 
+Kategori kini dapat diatur menjadi nominal bebas, jumlah barang (misalnya wakaf Quran per mushaf), zakat pendapatan, atau zakat mal. Pengaturan, perhitungan server, dan snapshot transaksi dipakai bersama oleh web serta mobile 1.1.0+2. [Cara mengatur kategori dan memperbarui hosting](docs/donation-calculations.md).
+
+Campaign dapat dibuat tanpa target dana dengan mengosongkan **Target dana (opsional)** di admin. Kosongkan juga batas waktu untuk program berkelanjutan. Jalankan migrasi terbaru dan gunakan mobile **1.1.1+3** untuk tampilan tanpa bar persentase/target Rp0. Target campaign yang sudah ada tetap dipertahankan.
+
 Website donasi milik satu yayasan (berizin PUB). Halaman publik mobile-first berupa Blade + Tailwind v4 + Alpine. Panel admin memakai Filament 3, pembayaran memakai Midtrans Snap.
 
 ## Menjalankan lokal

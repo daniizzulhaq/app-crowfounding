@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Distribution;
 use App\Models\Donation;
 use App\Models\MonthlyReport;
+use App\Services\DonationCalculator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\URL;
 
@@ -18,12 +19,15 @@ final class MobileData
         $program = $cover === null ? $campaign->programImage() : null;
         $data = [
             'id' => $campaign->id, 'slug' => $campaign->slug, 'title' => $campaign->title,
+            'donation_config' => DonationCalculator::config($campaign->category),
+            'paid_units' => (int) ($campaign->paid_units ?? ($campaign->category?->donation_type === 'unit' ? $campaign->paidDonations()->sum('quantity') : 0)),
             'summary' => $campaign->summary, 'category' => $campaign->category?->only(['id', 'name', 'slug', 'icon']),
             'cover_url' => $cover ?? $campaign->programCoverUrl(), 'is_illustration' => false,
             'cover_source' => $cover === null ? 'foundation' : 'upload',
             'cover_asset' => $program['file'] ?? null,
             'cover_aspect_ratio' => $program ? $program['width'] / $program['height'] : 16 / 9,
             'target_amount' => $campaign->target_amount,
+            'has_target' => $campaign->hasTarget(),
             'collected_amount' => $campaign->collected_amount, 'distributed_amount' => $campaign->distributed_amount,
             'donor_count' => $campaign->donor_count, 'progress_percent' => $campaign->progress_percent,
             'days_left' => $campaign->days_left, 'deadline' => $campaign->deadline?->toDateString(),
@@ -52,6 +56,7 @@ final class MobileData
 
         return [
             'order_id' => $donation->order_id, 'amount' => $donation->amount,
+            'quantity' => $donation->quantity, 'calculation' => $donation->calculation,
             'status' => $donation->status->value, 'target_label' => $donation->target_label,
             'created_at' => $donation->created_at?->toIso8601String(),
             'paid_at' => $donation->paid_at?->toIso8601String(),

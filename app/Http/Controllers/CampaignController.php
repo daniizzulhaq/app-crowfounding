@@ -43,7 +43,7 @@ class CampaignController extends Controller
     {
         abort_unless($campaign->isPubliclyVisible(), 404);
 
-        $campaign->load(['category:id,name,slug', 'media']);
+        $campaign->load(['category', 'media']);
 
         return view('campaigns.show', [
             'campaign' => $campaign,

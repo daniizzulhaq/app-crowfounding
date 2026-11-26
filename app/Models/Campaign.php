@@ -62,6 +62,9 @@ class Campaign extends Model implements HasMedia
     {
         // "Langsung tayang": first time it becomes active, stamp published_at.
         static::saving(function (Campaign $campaign) {
+            if ($campaign->target_amount !== null && $campaign->target_amount <= 0) {
+                $campaign->target_amount = null;
+            }
             if ($campaign->status === CampaignStatus::Active && $campaign->published_at === null) {
                 $campaign->published_at = now();
             }
@@ -149,15 +152,20 @@ class Campaign extends Model implements HasMedia
         return $query->select([
             'id', 'category_id', 'title', 'slug', 'summary', 'target_amount', 'collected_amount',
             'distributed_amount', 'donor_count', 'deadline', 'status', 'is_featured', 'published_at',
-        ])->with(['category:id,name,slug', 'media']);
+        ])->with(['category', 'media'])->withSum(['donations as paid_units' => fn (Builder $q) => $q->where('status', DonationStatus::Paid)], 'quantity');
     }
 
     // ---- Accessors -------------------------------------------------------
 
+    public function hasTarget(): bool
+    {
+        return (int) ($this->target_amount ?? 0) > 0;
+    }
+
     protected function progressPercent(): Attribute
     {
         return Attribute::get(function (): int {
-            if ($this->target_amount <= 0) {
+            if (! $this->hasTarget()) {
                 return 0;
             }
 

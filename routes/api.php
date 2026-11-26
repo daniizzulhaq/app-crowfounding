@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\DonationController;
 use App\Http\Controllers\Api\DonorController;
+use App\Http\Controllers\DonationQuoteController;
 use App\Http\Middleware\AuthenticateMobileDonor;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,7 @@ Route::prefix('v1')->middleware('throttle:api')->name('api.')->group(function ()
     Route::get('/home', [ContentController::class, 'home']);
     Route::get('/settings', [ContentController::class, 'settings']);
     Route::get('/categories', [ContentController::class, 'categories']);
+    Route::post('/donation-quote', DonationQuoteController::class);
     Route::get('/campaigns', [ContentController::class, 'campaigns']);
     Route::get('/campaigns/{campaign}', [ContentController::class, 'campaign']);
     Route::get('/campaigns/{campaign}/donors', [ContentController::class, 'donors']);

@@ -63,6 +63,8 @@ class DonationResource extends Resource
                     ->formatStateUsing(fn (int $state) => rupiah($state))
                     ->summarize(Tables\Columns\Summarizers\Sum::make()->label('Total')->formatStateUsing(fn ($state) => rupiah((int) $state))),
                 Tables\Columns\TextColumn::make('payment_method')->label('Metode')->badge()->color('gray')->placeholder('—'),
+                Tables\Columns\TextColumn::make('quantity')->label('Jumlah barang')->placeholder('—')
+                    ->formatStateUsing(fn ($state, Donation $record) => $state.' '.($record->calculation['unit_label'] ?? 'unit')),
                 Tables\Columns\TextColumn::make('status')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('prayer')->label('Doa')->limit(40)->tooltip(fn (Donation $record) => $record->prayer)->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('paid_at')->label('Dibayar')->dateTime('d M Y H:i')->sortable()->placeholder('—')->toggleable(),
@@ -134,6 +136,11 @@ class DonationResource extends Resource
                 Infolists\Components\TextEntry::make('order_id')->label('Order ID')->copyable()->fontFamily('mono'),
                 Infolists\Components\TextEntry::make('status')->badge(),
                 Infolists\Components\TextEntry::make('amount')->label('Nominal')->formatStateUsing(fn (int $state) => rupiah($state))->weight('bold'),
+                Infolists\Components\TextEntry::make('calculation.label')->label('Jenis donasi')->placeholder('Nominal bebas'),
+                Infolists\Components\TextEntry::make('quantity')->label('Jumlah barang')->placeholder('—')
+                    ->formatStateUsing(fn ($state, Donation $record) => $state.' '.($record->calculation['unit_label'] ?? 'unit')),
+                Infolists\Components\TextEntry::make('calculation.unit_price')->label('Harga satuan saat transaksi')
+                    ->formatStateUsing(fn ($state) => rupiah((int) $state))->placeholder('—'),
                 Infolists\Components\TextEntry::make('campaign.title')->label('Campaign')->placeholder('Sedekah umum'),
                 Infolists\Components\TextEntry::make('payment_method')->label('Metode')->placeholder('—'),
                 Infolists\Components\TextEntry::make('created_at')->label('Dibuat')->dateTime('d M Y H:i'),

@@ -140,6 +140,72 @@ Alpine.data('donationForm', (config) => ({
     message: '',
     min: config.min,
     max: config.max,
+    program: config.donationConfig || { type: 'nominal' },
+    quantity: 1,
+    mode: 'direct',
+    calculationInput: { period: 'monthly', income: '', bonus: '', cash: '', gold: '', investments: '', other: '', debts: '', haul: false },
+    quote: null,
+    quoteKey: '',
+    calculating: false,
+    init() {
+        if (this.program.type === 'unit') this.updateUnit(1);
+    },
+    get isZakat() { return ['zakat_income', 'zakat_mal'].includes(this.program.type); },
+    get calculatingZakat() { return this.isZakat && this.mode === 'calculate'; },
+    get formattedTotal() { return rupiah(this.amount); },
+    get unitPriceLabel() { return rupiah(this.program.unit_price); },
+    updateUnit(value) {
+        const raw = String(value);
+        this.quantity = /^\d+$/.test(raw) ? Number(raw) : 0;
+        this.amount = this.quantity * (this.program.unit_price || 0);
+        this.custom = this.amount ? new Intl.NumberFormat('id-ID').format(this.amount) : '';
+        delete this.errors.amount;
+        delete this.errors.quantity;
+    },
+    onUnitAmount(e) {
+        const value = digits(e.target.value);
+        this.amount = value;
+        this.custom = value ? new Intl.NumberFormat('id-ID').format(value) : '';
+        this.quantity = this.program.unit_price && value % this.program.unit_price === 0 ? value / this.program.unit_price : 0;
+        this.errors = this.quantity ? {} : { amount: 'Isi kelipatan ' + rupiah(this.program.unit_price) + ' untuk satuan utuh.' };
+    },
+    invalidateCalculation() {
+        this.quote = null;
+        this.quoteKey = '';
+        this.amount = 0;
+        this.custom = '';
+        this.message = '';
+    },
+    calculatorPayload() {
+        return Object.fromEntries(Object.entries(this.calculationInput).map(([key, value]) => [key, ['period', 'haul'].includes(key) ? value : digits(value)]));
+    },
+    async calculate() {
+        if (this.calculating) return;
+        this.invalidateCalculation();
+        if (Object.entries(this.calculationInput).some(([key, value]) => !['period', 'haul'].includes(key) && !/^[\d.]*$/.test(String(value)))) {
+            this.message = 'Isi nominal rupiah dengan angka positif, tanpa pecahan.';
+            return;
+        }
+        this.calculating = true;
+        const key = JSON.stringify(this.calculatorPayload());
+        try {
+            const response = await fetch(config.quoteUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify({ campaign: config.campaign, expected_type: this.program.type, payment_mode: 'calculate', calculation_input: this.calculatorPayload() }),
+            });
+            const payload = await response.json();
+            if (!response.ok) throw new Error(Object.values(payload.errors || {}).flat()[0] || payload.message || 'Perhitungan gagal.');
+            if (key !== JSON.stringify(this.calculatorPayload()) || !this.calculatingZakat) return;
+            this.quote = payload.data;
+            this.quoteKey = key;
+            this.amount = payload.data.amount;
+        } catch (error) {
+            this.message = error.message || 'Tidak dapat menghitung. Periksa koneksi Anda.';
+        } finally {
+            this.calculating = false;
+        }
+    },
     pick(v) {
         this.amount = v;
         this.custom = '';
@@ -161,6 +227,8 @@ Alpine.data('donationForm', (config) => ({
     },
     validate() {
         const e = {};
+        if (this.program.type === 'unit' && (!Number.isInteger(this.quantity) || this.quantity < 1 || this.quantity > 100000)) e.quantity = 'Pilih jumlah barang utuh antara 1 dan 100.000.';
+        if (this.calculatingZakat && (!this.quote || !this.quote.eligible || this.quoteKey !== JSON.stringify(this.calculatorPayload()))) e.amount = 'Hitung zakat terlebih dahulu dan pastikan syaratnya terpenuhi.';
         if (this.amount < this.min) e.amount = 'Minimal donasi ' + rupiah(this.min) + '.';
         if (this.amount > this.max) e.amount = 'Maksimal donasi ' + rupiah(this.max) + '.';
         if (!this.anonymous && !this.name.trim()) e.donor_name = 'Isi nama, atau aktifkan "Sembunyikan nama".';
@@ -170,7 +238,7 @@ Alpine.data('donationForm', (config) => ({
     },
     async submit() {
         this.message = '';
-        if (!this.validate()) {
+        if (this.loading || this.calculating || !this.validate()) {
             this.$nextTick(() => this.$root.querySelector('[aria-invalid="true"]')?.focus());
             return;
         }
@@ -186,6 +254,10 @@ Alpine.data('donationForm', (config) => ({
                 body: JSON.stringify({
                     campaign: config.campaign,
                     amount: this.amount,
+                    expected_type: this.program.type,
+                    quantity: this.program.type === 'unit' ? this.quantity : null,
+                    payment_mode: this.mode,
+                    calculation_input: this.calculatingZakat ? this.calculatorPayload() : null,
                     donor_name: this.name,
                     is_anonymous: this.anonymous,
                     phone: this.phone,

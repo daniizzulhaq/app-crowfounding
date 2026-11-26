@@ -4,6 +4,7 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ChooseCampaignController;
 use App\Http\Controllers\DistributionController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\DonationQuoteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\MyDonationController;
@@ -24,6 +25,7 @@ Route::get('/campaign/{campaign}/donasi', [DonationController::class, 'create'])
 // Donasi
 Route::get('/donasi/pilih', ChooseCampaignController::class)->name('donations.choose');
 Route::get('/donasi', [DonationController::class, 'create'])->name('donations.create');
+Route::post('/donasi/hitung', DonationQuoteController::class)->middleware('throttle:api')->name('donations.quote');
 Route::post('/donasi', [DonationController::class, 'store'])->middleware('throttle:donation')->name('donations.store');
 Route::get('/donasi/{orderId}', [DonationController::class, 'status'])->name('donations.status');
 Route::get('/donasi/{orderId}/status', [DonationController::class, 'statusJson'])->name('donations.status.json');

@@ -32,9 +32,15 @@
         <div class="mt-4">
             <p class="text-xs text-stone">Terkumpul</p>
             <p class="money text-2xl font-extrabold text-jade">{{ rupiah($campaign->collected_amount) }}</p>
-            <p class="text-sm text-stone">dari target <span class="money font-semibold text-ink">{{ rupiah($campaign->target_amount) }}</span></p>
+            @if ($campaign->hasTarget())
+                <p class="text-sm text-stone">dari target <span class="money font-semibold text-ink">{{ rupiah($campaign->target_amount) }}</span></p>
+            @else
+                <p class="text-sm text-stone">Tanpa target dana</p>
+            @endif
         </div>
-        <x-progress :value="$campaign->progress_percent" size="lg" class="mt-3" />
+        @if ($campaign->hasTarget())
+            <x-progress :value="$campaign->progress_percent" size="lg" class="mt-3" />
+        @endif
 
         <dl class="mt-4 grid grid-cols-3 gap-2 text-center">
             <div class="rounded-xl bg-paper px-2 py-2.5">
@@ -55,6 +61,9 @@
                 <dd class="money text-base font-bold">{{ \App\Support\Rupiah::short($campaign->distributed_amount) }}</dd>
             </div>
         </dl>
+        @if ($campaign->category?->donation_type === 'unit')
+            <p class="mt-3 text-sm font-semibold text-jade">{{ number_format((int) $campaign->paidDonations()->sum('quantity'), 0, ',', '.') }} {{ $campaign->category->unit_label ?: 'mushaf' }} dari donasi terbayar</p>
+        @endif
         <div class="campaign-detail-organizer">
             <img src="{{ $settings->logoUrl() }}" alt="Logo Al Kirom Depok" width="34" height="39">
             <div><p>Penggalang dana</p><strong>{{ $settings->foundationName() }} <x-glyph name="badge" class="size-4 text-jade" /></strong></div>

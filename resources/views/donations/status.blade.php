@@ -32,6 +32,11 @@
                 <p class="text-sm text-stone">untuk <span class="font-semibold text-ink">{{ $target }}</span></p>
             </div>
             <dl class="receipt-details divide-y divide-line border-t border-line text-left text-sm">
+                @if ($donation->quantity)
+                    <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">Jumlah</dt><dd class="font-semibold">{{ $donation->quantity }} {{ $donation->calculation['unit_label'] ?? 'unit' }} × {{ rupiah($donation->calculation['unit_price'] ?? 0) }}</dd></div>
+                @elseif (str_starts_with($donation->calculation['type'] ?? '', 'zakat_'))
+                    <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">Jenis</dt><dd class="font-semibold">{{ $donation->calculation['label'] }}</dd></div>
+                @endif
                 <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">No. donasi</dt><dd class="money font-semibold">{{ $donation->order_id }}</dd></div>
                 <div class="flex justify-between gap-3 px-5 py-3"><dt class="text-stone">Atas nama</dt><dd class="font-semibold">{{ $donation->display_name }}</dd></div>
                 @if ($donation->payment_method)

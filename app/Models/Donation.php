@@ -22,7 +22,7 @@ class Donation extends Model
      */
     protected $fillable = [
         'campaign_id', 'order_id', 'donor_name', 'is_anonymous', 'phone',
-        'amount', 'prayer', 'expires_at',
+        'amount', 'prayer', 'expires_at', 'quantity', 'calculation',
     ];
 
     /** Mirror DB defaults so fresh instances are consistent before refresh(). */
@@ -43,6 +43,8 @@ class Donation extends Model
             'is_anonymous' => 'boolean',
             'prayer_hidden' => 'boolean',
             'amount' => 'integer',
+            'quantity' => 'integer',
+            'calculation' => 'array',
             'paid_at' => 'datetime',
             'expires_at' => 'datetime',
             'midtrans_payload' => 'array',

@@ -7,7 +7,11 @@
             <div class="flex min-w-0 flex-1 flex-col">
                 <p class="text-[11px] font-semibold text-jade">{{ $campaign->category?->name }}</p>
                 <h3 class="line-clamp-2 text-sm leading-5 font-bold">{{ $campaign->title }}</h3>
-                <x-progress :value="$campaign->progress_percent" size="sm" class="mt-auto mb-1" />
+                @if ($campaign->hasTarget())
+                    <x-progress :value="$campaign->progress_percent" size="sm" class="mt-auto mb-1" />
+                @else
+                    <p class="mt-auto mb-1 text-xs text-stone">Tanpa target dana</p>
+                @endif
                 <p class="flex flex-wrap justify-between gap-2 text-xs text-stone">
                     <span class="money font-bold text-ink">{{ rupiah($campaign->collected_amount) }}</span>
                     <span>

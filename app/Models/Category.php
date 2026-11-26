@@ -12,7 +12,12 @@ class Category extends Model
 {
     use HasFactory, HasUniqueSlug;
 
-    protected $fillable = ['name', 'slug', 'icon', 'sort_order'];
+    protected $fillable = ['name', 'slug', 'icon', 'sort_order', 'donation_type', 'unit_label', 'unit_price', 'zakat_rate', 'zakat_nisab'];
+
+    protected function casts(): array
+    {
+        return ['unit_price' => 'integer', 'zakat_nisab' => 'integer', 'zakat_rate' => 'decimal:2'];
+    }
 
     protected function slugSource(): string
     {

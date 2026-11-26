@@ -4,6 +4,7 @@ namespace App\Actions\Donations;
 
 use App\Models\Campaign;
 use App\Models\Donation;
+use App\Services\DonationCalculator;
 use App\Services\Payment\PaymentGateway;
 use App\Services\Payment\PaymentGatewayException;
 use App\Support\PhoneNumber;
@@ -31,6 +32,7 @@ class CreateDonation
         $phone = PhoneNumber::normalize($data['phone']) ?? throw new InvalidArgumentException('Nomor WhatsApp tidak valid.');
         $isAnonymous = (bool) $data['is_anonymous'];
         $name = trim((string) ($data['donor_name'] ?? ''));
+        $quote = app(DonationCalculator::class)->quote($campaign, $data, true);
 
         $donation = Donation::create([
             'campaign_id' => $campaign?->id,
@@ -39,7 +41,9 @@ class CreateDonation
             'donor_name' => $name !== '' ? $name : Donation::ANONYMOUS_NAME,
             'is_anonymous' => $isAnonymous || $name === '',
             'phone' => $phone,
-            'amount' => (int) $data['amount'],
+            'amount' => $quote['amount'],
+            'quantity' => $quote['quantity'],
+            'calculation' => $quote['calculation'],
             'prayer' => filled($data['prayer'] ?? null) ? trim($data['prayer']) : null,
             'expires_at' => now()->addMinutes((int) config('alkiroma.donation.expiry_minutes')),
         ]);

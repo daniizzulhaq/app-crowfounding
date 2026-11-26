@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\IndonesianPhone;
+use App\Services\DonationCalculator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +30,7 @@ class StoreDonationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            ...DonationCalculator::rules(),
             'campaign' => ['nullable', 'string', 'exists:campaigns,slug'],
             'amount' => [
                 'required', 'integer',
@@ -67,6 +69,10 @@ class StoreDonationRequest extends FormRequest
             'phone' => $this->validated('phone'),
             'amount' => (int) $this->validated('amount'),
             'prayer' => $this->validated('prayer'),
+            'quantity' => $this->validated('quantity'),
+            'expected_type' => $this->validated('expected_type'),
+            'payment_mode' => $this->validated('payment_mode'),
+            'calculation_input' => $this->validated('calculation_input'),
         ];
     }
 }

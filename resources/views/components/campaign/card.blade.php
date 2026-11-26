@@ -10,9 +10,15 @@
         <div class="mt-auto">
             <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                 <p class="money text-[15px] font-extrabold text-jade">{{ rupiah($campaign->collected_amount) }}</p>
-                <p class="money text-xs font-semibold text-stone">{{ $campaign->progress_percent }}%</p>
+                @if ($campaign->hasTarget())
+                    <p class="money text-xs font-semibold text-stone">{{ $campaign->progress_percent }}%</p>
+                @else
+                    <p class="text-xs text-stone">Tanpa target dana</p>
+                @endif
             </div>
-            <x-progress :value="$campaign->progress_percent" size="sm" />
+            @if ($campaign->hasTarget())
+                <x-progress :value="$campaign->progress_percent" size="sm" />
+            @endif
             <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-stone">
                 <p><span class="money font-bold text-ink">{{ number_format($campaign->donor_count, 0, ',', '.') }}</span> donasi</p>
                 <p class="inline-flex items-center gap-1"><x-glyph name="clock" class="size-3" />

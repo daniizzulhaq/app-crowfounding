@@ -80,8 +80,10 @@ class CampaignResource extends Resource
                 ]),
                 Forms\Components\Section::make('Target')->schema([
                     MoneyInput::make('target_amount')
-                        ->label('Target dana')
-                        ->required()
+                        ->label('Target dana (opsional)')
+                        ->nullable()
+                        ->placeholder('Tanpa target dana')
+                        ->helperText('Kosongkan untuk program berkelanjutan seperti wakaf Quran. Donatur tetap memilih jumlah atau nominal donasinya.')
                         ->minValue(100_000),
                     Forms\Components\DatePicker::make('deadline')
                         ->label('Batas waktu')
@@ -110,6 +112,10 @@ class CampaignResource extends Resource
                     Forms\Components\Placeholder::make('donors')->label('Jumlah donasi')
                         ->content(fn (?Campaign $record) => number_format($record?->donor_count ?? 0, 0, ',', '.')),
                 ])->hiddenOn('create')->description('Hanya berubah dari pembayaran & penyaluran.'),
+                Forms\Components\Section::make('Barang dari pembayaran terkonfirmasi')->schema([
+                    Forms\Components\Placeholder::make('paid_units')->label('Jumlah barang terbayar')
+                        ->content(fn (?Campaign $record) => (int) $record?->paidDonations()->sum('quantity')),
+                ])->hiddenOn('create'),
             ])->columnSpan(['lg' => 1]),
         ])->columns(3);
     }
@@ -126,7 +132,7 @@ class CampaignResource extends Resource
                 Tables\Columns\TextColumn::make('status')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('collected_amount')->label('Terkumpul')->sortable()
                     ->formatStateUsing(fn (int $state) => rupiah($state))
-                    ->description(fn (Campaign $record) => $record->progress_percent.'% dari '.rupiah($record->target_amount)),
+                    ->description(fn (Campaign $record) => $record->hasTarget() ? $record->progress_percent.'% dari '.rupiah($record->target_amount) : 'Tanpa target dana'),
                 Tables\Columns\TextColumn::make('distributed_amount')->label('Tersalurkan')->sortable()
                     ->formatStateUsing(fn (int $state) => rupiah($state))->toggleable(),
                 Tables\Columns\TextColumn::make('donor_count')->label('Donasi')->numeric(locale: 'id')->sortable(),
